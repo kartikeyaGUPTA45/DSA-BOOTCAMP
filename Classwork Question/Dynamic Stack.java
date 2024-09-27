@@ -1,87 +1,89 @@
 import java.io.*;
 import java.util.*;
 
-public class Solution {
-
-    public static class Stack {
-        int arr [];
-        int cap;
-        int tos;
-        
-        Stack(int cap){
-            this.cap = cap;
-            arr = new int[cap];
-            tos = -1;
-        }
-        
-        int size(){
-            return tos+1;
-        }
-        
-        void display(){
-            for(int i =tos;i>=0;i--){
-                System.out.print(arr[i] + " ");
-            }
-        }
-        
-        int peek(){
-            if(tos == -1){
-                System.out.println("Stack underflow");
-                return -1;
-            }
-            
-            return arr[tos];
-        }
-        
-        int pop(){
-            if(tos == -1){
-                System.out.println("Stack underflow");
-                return -1;
-            }
-            
-            int val = arr[tos];
-            tos--;
-            return val;
-        }
-        
-        void push(int val){
-            if(tos == arr.length-1){
-                int newArr[] = new int[2*arr.length];
-                for(int i=0;i<=tos;i++){
-                    newArr[i] = arr[i];
-                }
-                
-                arr = newArr;
-            }
-            
-            tos++;
-            arr[tos] = val;
-            
-        }
-        
+class CustomStack{
+    
+    int capacity = -1;
+    int size = 0;
+    ArrayList<Integer> stk = new ArrayList<>();
+    
+    CustomStack(int n){
+        capacity = n;
     }
     
-    public static void main(String[] args) {
-        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution. */
-        Scanner scn = new Scanner(System.in);
-        int t = 15;
-        Stack st = new Stack(5);
-        for(int i=0;i<t;i++){
-            String operation = scn.next();
-            if (operation.equals("Push")){
-                int x = scn.nextInt();
-                st.push(x);
-            } else if (operation.equals("Pop")){
-                System.out.println(st.pop());
-            } else if (operation.equals("Size")){
-                System.out.println(st.size());
-            } else if (operation.equals("Display")){
-                st.display();
-            } else if (operation.equals("Peek")){
-                System.out.println(st.peek());
-            } else {
-                System.out.println("Performing wrong opertaion");
-            }
+    void push(int data){
+        
+        if(size == capacity){
+            capacity += capacity;
         }
+        
+        stk.add(data);
+        size++;
+    }
+    
+    void pop(){
+        
+        if(size == 0){
+            System.out.println("Stack underflow");
+            return;
+        }
+        
+        int data = stk.remove(size-1);
+        System.out.println(data);
+        size--;
+    }
+    
+    void display(){
+        
+        for(int i=size-1; i>=0; i--){
+            System.out.print(stk.get(i) + " ");
+        }
+        
+        System.out.println();
+    }
+    
+    void top(){
+        if(size == 0){
+            System.out.println("Stack underflow");
+            return;
+        }
+        
+        System.out.println(stk.get(size-1));
+    }
+}
+public class Solution {
+
+    public static void main(String[] args) {
+        
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        CustomStack cst = new CustomStack(n);
+        
+        String s = "";
+        
+        while(sc.hasNext()){
+            s = sc.next();
+            
+            if(s.equals("push") == true){
+                int data = sc.nextInt();
+                cst.push(data);
+            }
+            
+            else if(s.equals("pop") == true){
+                cst.pop();
+            }
+            
+            else if(s.equals("display") == true){
+                cst.display();
+            }
+            
+            else if(s.equals("top") == true){
+                cst.top();
+            }
+            
+            else
+                break;
+        }
+        
     }
 }
