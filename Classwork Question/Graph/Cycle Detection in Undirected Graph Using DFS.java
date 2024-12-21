@@ -2,94 +2,53 @@ import java.io.*;
 import java.util.*;
 
 public class Solution {
-
-    static class Edge {
-        int src;
-        int nbr;
-
-        Edge(int src, int nbr) {
-            this.src = src;
-            this.nbr = nbr;
+  
+    public static boolean dfs(int node, List<List<Integer>> adj, int vis[], int parent) {
+      vis[node] = 1;
+      for(int nbr:adj.get(node)) {
+        if (vis[nbr] == 0) {
+          return dfs(nbr,adj,vis,node);
+        } else if (nbr != parent) {
+          return true;
         }
-    }
-
-
-    public static void main(String[] agrs) {
-
-        Scanner scn = new Scanner(System.in);
-
-        String[] init = scn.nextLine().split(" ");
-
-        int v = Integer.parseInt(init[0]);
-        int e = Integer.parseInt(init[1]);
-
-        // Graph
-
-        ArrayList<Edge>[] graph = new ArrayList[v];
-
-        for (int i = 0; i < v; i++) {
-            graph[i] = new ArrayList<>();
-        }
-
-        for (int i = 0; i < e; i++) {
-
-            String[] parts = scn.nextLine().split(" ");
-
-            int v1 = Integer.parseInt(parts[0]);
-            int v2 = Integer.parseInt(parts[1]);
-
-            graph[v1].add(new Edge(v1, v2));
-            graph[v2].add(new Edge(v2, v1));
-
-        }
-
-//         for (int i = 0; i < graph.length; i++) {
-//             System.out.print(i + " ");
-
-//             for (Edge edge: graph[i]) {
-//                 System.out.print(edge.nbr + " ");
-//             }
-
-//             System.out.println();
-//         }
-        
-        boolean[] visited = new boolean[v];
-        
-        boolean isCycle = false;
-        for (int i = 0; i < v; i++) {
-            if (!visited[i]) {
-                if (isCycleDFS(graph, visited, i, -1)) {
-                    isCycle = true;
-                    break;
-                }
-            }
-        }
-        
-        if (isCycle) {
-            System.out.println(true);
-        } else {
-            System.out.println(false);
-        }
+      }
+      return false;
     }
     
-    public static boolean isCycleDFS(ArrayList<Edge>[] graph, boolean[] visited, int currVertex, int parent) {
-
-        visited[currVertex] = true;
-
-        for (Edge e: graph[currVertex]) {
-            if (! visited[e.nbr]) {
-                if (isCycleDFS(graph, visited, e.nbr, currVertex)) {
-                    visited[e.nbr] = true;
-                    return true;
-                }
-            } else {
-                if (e.nbr != parent) {
-                    return true;
-                }
-            }
+    public static boolean isCyclePresent(List<List<Integer>> adj, int n) {
+      int vis [] = new int[n];
+      
+      for(int i=0;i<n;i++) {
+        if(vis[i] == 0) {
+          if(dfs(i,adj,vis,-1) == true) {
+            return true;
+          }
         }
+      }
+      
+      return false;
+    }
 
-        return false;
-
+    public static void main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution. */
+      Scanner scn = new Scanner(System.in);
+      int n = scn.nextInt();
+      int m = scn.nextInt();
+      
+      List<List<Integer>> adj = new ArrayList<>();
+      
+      for(int i=0;i<n;i++) {
+        adj.add(new ArrayList<>());
+      }
+      
+      for(int i=0;i<m;i++) {
+        int u = scn.nextInt();
+        int v = scn.nextInt();
+        
+        adj.get(u).add(v);
+        adj.get(v).add(u);
+      }
+      
+      System.out.println(isCyclePresent(adj,n));
     }
 }
